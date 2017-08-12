@@ -121,8 +121,10 @@ end
 
 % Plot saturation
    Sco2Matrix = reshape(rSol.s(:,1),[50, 40])' ;
+   Sco2Matrix = fliplr(Sco2Matrix);
    %SbrineMatrix = reshape(rSol.s(:,1),[40, 50]);
    SbrineMatrix = reshape(rSol.s(:,2),[50, 40])' ;
+   
    imagesc(Sco2Matrix);
    colorbar;
    %colormap jet;
