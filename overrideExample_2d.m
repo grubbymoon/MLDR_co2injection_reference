@@ -119,22 +119,45 @@ for i=1:numel(dT)
 
 end
 
+% plot saturation
+Sco2Matrix = reshape(rSol.s(:,1),[50, 40])' ;
+Sco2Matrix = fliplr(Sco2Matrix);
+%SbrineMatrix = reshape(rSol.s(:,1),[40, 50]);
+SbrineMatrix = reshape(rSol.s(:,2),[50, 40])' ;
+
+dx = 5;
+dz = 0.5;
+
+x = 2.5:5:1497.5;
+z = 0.25:0.5:(50-0.25);
+    
+figure(1);
+h1 = uimagesc(x,z',Sco2Matrix');
+colormap(jet);
+% shading flat; 
+% shading interp;
+% caxis([ 700 850]); colorbar;
+caxis([0.0 1.0]);colorbar('ticks',0:0.1:1.0);
+% colorbar('ytick',0:0.1:1);
+% xlim([0 2000]);ylim([0 50]);
+xlabel('x [m]','fontsize',18);
+ylabel('z [m]','fontsize',18);
+set(gca, 'fontsize',18,'ylim',[0 50],'xlim',[0 1500],'ytick',0:10:50);
+set(gca,'YDir','normal');
+fig = gcf;
+fig.PaperPosition = [0 2 7.5 3];
+saveas(gcf,'matrix.pdf');
+
 % Plot saturation
-   Sco2Matrix = reshape(rSol.s(:,1),[50, 40])' ;
-   Sco2Matrix = fliplr(Sco2Matrix);
-   %SbrineMatrix = reshape(rSol.s(:,1),[40, 50]);
-   SbrineMatrix = reshape(rSol.s(:,2),[50, 40])' ;
-   
-   imagesc(Sco2Matrix);
+%    Sco2Matrix = reshape(rSol.s(:,1),[50, 40])' ;
+%    Sco2Matrix = fliplr(Sco2Matrix);
+%    %SbrineMatrix = reshape(rSol.s(:,1),[40, 50]);
+%    SbrineMatrix = reshape(rSol.s(:,2),[50, 40])' ;
+%    
+%    imagesc(Sco2Matrix);
    colorbar;
    %colormap jet;
-   %delete(hs);
-   %hs = plotCellData(G, rSol.s(:,1), (rSol.s(:,1)>.01), pargs{:});
-   %view(45, 35);
-   %hs = plotCellData(G, rSol.s(:,1));
-   %title([num2str(convertTo(t,day)), 'days']),
-   %caxis([0 1]); drawnow 
-
+   
 %% Oil rate, with peak production indicated by red line
 % figure,
 % [Ym,Tm] = meshgrid(G.cells.centroids(W(1).cells,3),cumsum(dT)/year);
