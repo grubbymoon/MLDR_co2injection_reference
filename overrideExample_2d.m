@@ -36,7 +36,7 @@ zoom(1.4); set(gca,'dataasp',[2 2 1]); view(27,-12);
 
 %% Setup wells
 % Both wells are perforated in the lower zone only.
-T  = 1*day();
+T  = 10*day();
 % x = G.cells.centroids(:,1:2);
 % W = addWell([], G, rock,...
 %             find( sum(bsxfun(@minus,x,[67.5 487.5]).^2,2)<320 ...
@@ -58,8 +58,8 @@ T  = 1*day();
 % plotWell(G,W,'height',75,'radius',10000);
 
 %src = addSource([], 1, .8*sum(poreVolume(G,rock))/T,'sat',[1 0]);
-ci = linspace(1000,2000,51);
-src = addSource([], ci, repmat(5,ci,1), 'sat', [1,0]);
+ci = linspace(1000,2000,21);
+src = addSource([], ci, repmat(0.3,numel(ci),1), 'sat', [1,0]);
 
 
 CG = generateCoarseGrid(G,(layer(G.cells.centroids)>0)+1);
@@ -78,7 +78,7 @@ fluid = initSimpleFluid('mu' , [  .1,   1] .* centi*poise     , ...
 bc = psideh([], G, 'xmax', fluid, 'sat', [0 1]);
 
 %% Simulation loop
-N  = 1;
+N  = 10;
 dT = T/N*ones(N,1);
 dT = [dT(1)*sort(2.^-[1:4 4])'; dT(2:end)];
 
@@ -125,7 +125,7 @@ end
    SbrineMatrix = reshape(rSol.s(:,2),[50, 40])' ;
    imagesc(Sco2Matrix);
    colorbar;
-   colormap jet;
+   %colormap jet;
    %delete(hs);
    %hs = plotCellData(G, rSol.s(:,1), (rSol.s(:,1)>.01), pargs{:});
    %view(45, 35);
