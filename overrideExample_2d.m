@@ -36,7 +36,7 @@ zoom(1.4); set(gca,'dataasp',[2 2 1]); view(27,-12);
 
 %% Setup wells
 % Both wells are perforated in the lower zone only.
-T  = 10*day();
+T  = 365*day();
 % x = G.cells.centroids(:,1:2);
 % W = addWell([], G, rock,...
 %             find( sum(bsxfun(@minus,x,[67.5 487.5]).^2,2)<320 ...
@@ -57,20 +57,20 @@ T  = 10*day();
 %plotWell(G,W,'height',75,'radius',.01);
 % plotWell(G,W,'height',75,'radius',10000);
 
-%src = addSource([], 1, .8*sum(poreVolume(G,rock))/T,'sat',[1 0]);
+% src = addSource([], 1, .8*sum(poreVolume(G,rock))/T,'sat',[1 0]);
 ci = linspace(1000,2000,21);
-src = addSource([], ci, repmat(0.3,numel(ci),1), 'sat', [1,0]);
+src = addSource([], ci, repmat(846.72*meter^3/day,numel(ci),1), 'sat', [1,0]);
 
 
 CG = generateCoarseGrid(G,(layer(G.cells.centroids)>0)+1);
-plotFaces(CG,1:CG.faces.num,'FaceColor','none','LineWidth',1);
-plotFaces(CG,11,'FaceColor','y','FaceAlpha',.3);
+%plotFaces(CG,1:CG.faces.num,'FaceColor','none','LineWidth',1);
+%plotFaces(CG,11,'FaceColor','y','FaceAlpha',.3);
 
 
 %% Fluid model
 % Inject a light and mobilt fluid into a denser and less mobile fluid
-fluid = initSimpleFluid('mu' , [  .1,   1] .* centi*poise     , ...
-                        'rho', [ 700,1000] .* kilogram/meter^3, ...
+fluid = initSimpleFluid('mu' , [  0.0726,   0.72] .* centi*poise     , ...
+                        'rho', [ 810,1000] .* kilogram/meter^3, ...
                         'n'  , [   2,   2]);               %    ,...
 %                        'sr' , [0, 0.3]);
                     
@@ -78,7 +78,7 @@ fluid = initSimpleFluid('mu' , [  .1,   1] .* centi*poise     , ...
 bc = psideh([], G, 'xmax', fluid, 'sat', [0 1]);
 
 %% Simulation loop
-N  = 10;
+N  = 365;
 dT = T/N*ones(N,1);
 dT = [dT(1)*sort(2.^-[1:4 4])'; dT(2:end)];
 
@@ -143,11 +143,11 @@ caxis([0.0 1.0]);colorbar('ticks',0:0.1:1.0);
 % xlim([0 2000]);ylim([0 50]);
 xlabel('x [m]','fontsize',18);
 ylabel('z [m]','fontsize',18);
-set(gca, 'fontsize',18,'ylim',[0 200],'xlim',[0 1500],'ytick',0:10:200);
+set(gca, 'fontsize',18,'ylim',[0 200],'xlim',[0 1500],'ytick',0:20:200);
 set(gca,'YDir','normal');
 fig = gcf;
 fig.PaperPosition = [0 2 7.5 3];
-saveas(gcf,'matrix.pdf');
+saveas(gcf,'MRST2D_reference_solution.pdf');
 
 % Plot saturation
 %    Sco2Matrix = reshape(rSol.s(:,1),[50, 40])' ;
