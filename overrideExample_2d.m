@@ -129,10 +129,11 @@ dx = 5;
 dz = 0.5;
 
 x = 2.5:5:1497.5;
-z = 0.25:0.5:(50-0.25);
-    
+z = 0.25:0.5:(200-0.25);
+
 figure(1);
-h1 = uimagesc(x,z',Sco2Matrix');
+Sco2Matrix = flipud(Sco2Matrix);
+h1 = uimagesc(x,z,Sco2Matrix);
 colormap(jet);
 % shading flat; 
 % shading interp;
@@ -142,7 +143,7 @@ caxis([0.0 1.0]);colorbar('ticks',0:0.1:1.0);
 % xlim([0 2000]);ylim([0 50]);
 xlabel('x [m]','fontsize',18);
 ylabel('z [m]','fontsize',18);
-set(gca, 'fontsize',18,'ylim',[0 50],'xlim',[0 1500],'ytick',0:10:50);
+set(gca, 'fontsize',18,'ylim',[0 200],'xlim',[0 1500],'ytick',0:10:200);
 set(gca,'YDir','normal');
 fig = gcf;
 fig.PaperPosition = [0 2 7.5 3];
