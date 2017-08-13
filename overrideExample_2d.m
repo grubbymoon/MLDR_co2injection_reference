@@ -10,7 +10,7 @@ mrstModule add incomp coarsegrid ad-core
 % The grid has two zones with different permeabilities: high permeability
 % on top and low below, or opposite if inequality sign is reversed in the
 % definition of layer function
-G = cartGrid([50,1,40],[1500 1000 200]);
+G = cartGrid([50,1,40],[1500 1000 100]);
 %G = cartGrid([60,1,10],[1500 10 200]);
 G.nodes.coords(:,3) = G.nodes.coords(:,3)+2050;
 G = computeGeometry(G);
@@ -19,7 +19,8 @@ G = computeGeometry(G);
 %plotGrid(G); view(3); axis tight
 
 [K1,K2,p1,p2] = deal(10,100,.3,.3);
-layer = @(c) (c(:,3)-2150)>0; % <0: high perm on top, >0: low on top
+%layer = @(c) (c(:,3)-2150)>0; % <0: high perm on top, >0: low on top
+layer = @(c) (c(:,3)-2100)>0; % <0: high perm on top, >0: low on top
 
 rock = makeRock(G, K1*milli*darcy, p1);
 rock.poro(layer(G.cells.centroids)) = p2;
@@ -62,7 +63,7 @@ ci = linspace(1000,2000,21);
 src = addSource([], ci, repmat(846.72*meter^3/day,numel(ci),1), 'sat', [1,0]);
 
 
-CG = generateCoarseGrid(G,(layer(G.cells.centroids)>0)+1);
+%CG = generateCoarseGrid(G,(layer(G.cells.centroids)>0)+1);
 %plotFaces(CG,1:CG.faces.num,'FaceColor','none','LineWidth',1);
 %plotFaces(CG,11,'FaceColor','y','FaceAlpha',.3);
 
@@ -129,7 +130,7 @@ dx = 5;
 dz = 0.5;
 
 x = 2.5:5:1497.5;
-z = 0.25:0.5:(200-0.25);
+z = 0.25:0.5:(100-0.25);
 
 figure(1);
 Sco2Matrix = flipud(Sco2Matrix);
@@ -143,7 +144,7 @@ caxis([0.0 1.0]);colorbar('ticks',0:0.1:1.0);
 % xlim([0 2000]);ylim([0 50]);
 xlabel('x [m]','fontsize',18);
 ylabel('z [m]','fontsize',18);
-set(gca, 'fontsize',18,'ylim',[0 200],'xlim',[0 1500],'ytick',0:20:200);
+set(gca, 'fontsize',18,'ylim',[0 100],'xlim',[0 1500],'ytick',0:20:100);
 set(gca,'YDir','normal');
 fig = gcf;
 fig.PaperPosition = [0 2 7.5 3];
