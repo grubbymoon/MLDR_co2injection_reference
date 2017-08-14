@@ -5,12 +5,16 @@
 % placed near the west side and perforated in the lower zone only.
 mrstModule add incomp coarsegrid ad-core
 
+% time step size from 1 day to 0.1 day, nothing change
+% vertical refinement from 40 mesh to 100 mesh, nothing change
+% dx from 15m to 5m, nothing change
+
 
 %% Make grid and assign petrophysical properties
 % The grid has two zones with different permeabilities: high permeability
 % on top and low below, or opposite if inequality sign is reversed in the
 % definition of layer function
-G = cartGrid([50,1,40],[1500 1000 100]);
+G = cartGrid([50,1,40],[1500 100 100]);
 %G = cartGrid([60,1,10],[1500 10 200]);
 G.nodes.coords(:,3) = G.nodes.coords(:,3)+2050;
 G = computeGeometry(G);
@@ -18,7 +22,7 @@ G = computeGeometry(G);
 %figure(1); clf
 %plotGrid(G); view(3); axis tight
 
-[K1,K2,p1,p2] = deal(10,100,.3,.3);
+[K1,K2,p1,p2] = deal(10,100,.25,.25);
 %layer = @(c) (c(:,3)-2150)>0; % <0: high perm on top, >0: low on top
 layer = @(c) (c(:,3)-2100)>0; % <0: high perm on top, >0: low on top
 
@@ -37,7 +41,8 @@ zoom(1.4); set(gca,'dataasp',[2 2 1]); view(27,-12);
 
 %% Setup wells
 % Both wells are perforated in the lower zone only.
-T  = 365*day();
+% No wells are included in this test
+T  = (365*2)*day();
 % x = G.cells.centroids(:,1:2);
 % W = addWell([], G, rock,...
 %             find( sum(bsxfun(@minus,x,[67.5 487.5]).^2,2)<320 ...
@@ -59,13 +64,15 @@ T  = 365*day();
 % plotWell(G,W,'height',75,'radius',10000);
 
 % src = addSource([], 1, .8*sum(poreVolume(G,rock))/T,'sat',[1 0]);
+% add the source of CO2 at the bottom layer
 ci = linspace(1000,2000,21);
-src = addSource([], ci, repmat(846.72*meter^3/day,numel(ci),1), 'sat', [1,0]);
+% this injection rate is for every cell/ in c++ code is in the whole domain
+src = addSource([], ci, repmat(42.33*meter^3/day,numel(ci),1), 'sat', [1,0]);
 
 
-%CG = generateCoarseGrid(G,(layer(G.cells.centroids)>0)+1);
-%plotFaces(CG,1:CG.faces.num,'FaceColor','none','LineWidth',1);
-%plotFaces(CG,11,'FaceColor','y','FaceAlpha',.3);
+CG = generateCoarseGrid(G,(layer(G.cells.centroids)>0)+1);
+plotFaces(CG,1:CG.faces.num,'FaceColor','none','LineWidth',1);
+plotFaces(CG,11,'FaceColor','y','FaceAlpha',.3);
 
 
 %% Fluid model
@@ -79,7 +86,7 @@ fluid = initSimpleFluid('mu' , [  0.0726,   0.72] .* centi*poise     , ...
 bc = psideh([], G, 'xmax', fluid, 'sat', [0 1]);
 
 %% Simulation loop
-N  = 365;
+N  = 365*2;
 dT = T/N*ones(N,1);
 dT = [dT(1)*sort(2.^-[1:4 4])'; dT(2:end)];
 
