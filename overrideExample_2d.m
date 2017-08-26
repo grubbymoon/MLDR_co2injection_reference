@@ -14,7 +14,7 @@ mrstModule add incomp coarsegrid ad-core
 % The grid has two zones with different permeabilities: high permeability
 % on top and low below, or opposite if inequality sign is reversed in the
 % definition of layer function
-G = cartGrid([50,1,40],[1500 100 100]);
+G = cartGrid([50,1,40],[2000 100 100]);
 %G = cartGrid([60,1,10],[1500 10 200]);
 G.nodes.coords(:,3) = G.nodes.coords(:,3)+2050;
 G = computeGeometry(G);
@@ -136,8 +136,8 @@ SbrineMatrix = reshape(rSol.s(:,2),[50, 40])' ;
 dx = 5;
 dz = 0.5;
 
-x = 2.5:5:1497.5;
-z = 0.25:0.5:(100-0.25);
+x = 20:40:1980;
+z = 1.25:2.5:(100-1.25);
 
 figure(1);
 Sco2Matrix = flipud(Sco2Matrix);
@@ -151,11 +151,11 @@ caxis([0.0 1.0]);colorbar('ticks',0:0.1:1.0);
 % xlim([0 2000]);ylim([0 50]);
 xlabel('x [m]','fontsize',18);
 ylabel('z [m]','fontsize',18);
-set(gca, 'fontsize',18,'ylim',[0 100],'xlim',[0 1500],'ytick',0:20:100);
+set(gca, 'fontsize',18,'ylim',[0 100],'xlim',[0 2000],'ytick',0:20:100);
 set(gca,'YDir','normal');
 fig = gcf;
 fig.PaperPosition = [0 2 7.5 3];
-saveas(gcf,'MRST2D_reference_solution.pdf');
+%saveas(gcf,'MRST2D_reference_solution.pdf');
 
 % Plot saturation
 %    Sco2Matrix = reshape(rSol.s(:,1),[50, 40])' ;
